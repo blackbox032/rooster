@@ -10,7 +10,7 @@ start(Options) ->
 loop({ReqMod, _} = Req, _DocRoot) ->
   try
     Response = rooster_dispatcher:match_route(rooster_adapter:request(Req)),
-    ReqMod:respond(rooster_adapter:server_response(Response))
+    ReqMod:respond(rooster_adapter:server_response(Response), Req)
   catch
     Type:What ->
       log_error(Type, What),
