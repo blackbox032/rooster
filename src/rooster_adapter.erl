@@ -37,15 +37,15 @@ route_response({Status, Resp}) ->
 route_response(Response) ->
   Response.
 
-request(Req) ->
-  #{path          => Req:get(path),
-    method        => Req:get(method),
-    headers       => Req:get(headers),
-    body          => rooster_json:decode(Req:recv_body()),
-    qs            => Req:parse_qs(),
-    cookies       => Req:parse_cookie(),
+request({ReqMod, _} = Req) ->
+  #{path          => ReqMod:get(path, Req),
+    method        => ReqMod:get(method, Req),
+    headers       => ReqMod:get(headers, Req),
+    body          => rooster_json:decode(ReqMod:recv_body(Req)),
+    qs            => ReqMod:parse_qs(Req),
+    cookies       => ReqMod:parse_cookie(Req),
     params        => [],
-    authorization => Req:get_header_value('Authorization')}.
+    authorization => ReqMod:get_header_value('Authorization', Req)}.
 
 nested_route([]) -> [];
 nested_route([{Method, Path, Fn, Middleware}|T]) ->
