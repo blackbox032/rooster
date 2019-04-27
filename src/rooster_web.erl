@@ -7,14 +7,14 @@ start(Options) ->
   Loop = fun(Req) -> ?MODULE:loop(Req, DocRoot) end,
   mochiweb_http:start([{name, ?MODULE}, {loop, Loop} | Options1]).
 
-loop(Req, _DocRoot) ->
+loop({ReqMod, _} = Req, _DocRoot) ->
   try
     Response = rooster_dispatcher:match_route(rooster_adapter:request(Req)),
-    Req:respond(rooster_adapter:server_response(Response))
+    ReqMod:respond(rooster_adapter:server_response(Response))
   catch
     Type:What ->
       log_error(Type, What),
-      Req:respond({500, [{"Content-Type", "application/json"}], request_fail_msg()})
+      ReqMod:respond({500, [{"Content-Type", "application/json"}], request_fail_msg()})
   end.
 
 request_fail_msg() ->
