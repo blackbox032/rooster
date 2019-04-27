@@ -14,7 +14,7 @@ loop({ReqMod, _} = Req, _DocRoot) ->
   catch
     Type:What ->
       log_error(Type, What),
-      ReqMod:respond({500, [{"Content-Type", "application/json"}], request_fail_msg()})
+      ReqMod:respond({500, [{"Content-Type", "application/json"}], request_fail_msg()}, Req)
   end.
 
 request_fail_msg() ->
