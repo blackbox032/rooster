@@ -38,6 +38,7 @@ route_response(Response) ->
   Response.
 
 request({ReqMod, _} = Req) ->
+        io:format("Req ~p~n", [Req]),
   #{path          => ReqMod:get(path, Req),
     method        => ReqMod:get(method, Req),
     headers       => ReqMod:get(headers, Req),
